@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from keras.utils import np_utils
+from tensorflow.python.keras.utils import np_utils
 from wavenet_vocoder.util import sequence_mask
 
 from .gaussian import gaussian_maximum_likelihood_estimation_loss

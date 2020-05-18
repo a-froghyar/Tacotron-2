@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 from datasets import audio
 from infolog import log
-from keras.utils import np_utils
+from tensorflow.python.keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 
 from .util import is_mulaw_quantize, is_scalar_input
