@@ -118,7 +118,7 @@ hparams = tf.contrib.training.HParams(
 
 	#Tacotron
 	#Model general type
-	outputs_per_step = 8, #number of frames to generate at each decoding step (increase to speed up computation and allows for higher batch size, decreases G&L audio quality)
+	outputs_per_step = 2, #number of frames to generate at each decoding step (increase to speed up computation and allows for higher batch size, decreases G&L audio quality)
 	stop_at_any = True, #Determines whether the decoder should stop when predicting <stop> to any frame or to all of them (True works pretty well)
 	batch_norm_position = 'after', #Can be in ('before', 'after'). Determines whether we use batch norm before or after the activation function (relu). Matter for debate.
 	clip_outputs = True, #Whether to clip spectrograms to T2_output_range (even in loss computation). ie: Don't penalize model for exceeding output range and bring back to borders.
@@ -242,7 +242,7 @@ hparams = tf.contrib.training.HParams(
 	tacotron_swap_with_cpu = False, #Whether to use cpu as support to gpu for decoder computation (Not recommended: may cause major slowdowns! Only use when critical!)
 
 	#train/test split ratios, mini-batches sizes
-	tacotron_batch_size = 16, #number of training samples on each training steps
+	tacotron_batch_size = 64, #number of training samples on each training steps
 	#Tacotron Batch synthesis supports ~16x the training batch size (no gradients during testing). 
 	#Training Tacotron with unmasked paddings makes it aware of them, which makes synthesis times different from training. We thus recommend masking the encoder.
 	tacotron_synthesis_batch_size = 1, #DO NOT MAKE THIS BIGGER THAN 1 IF YOU DIDN'T TRAIN TACOTRON WITH "mask_encoder=True"!!
@@ -298,7 +298,7 @@ hparams = tf.contrib.training.HParams(
 	wavenet_swap_with_cpu = False, #Whether to use cpu as support to gpu for synthesis computation (while loop).(Not recommended: may cause major slowdowns! Only use when critical!)
 
 	#train/test split ratios, mini-batches sizes
-	wavenet_batch_size = 8, #batch size used to train wavenet.
+	wavenet_batch_size = 16, #batch size used to train wavenet.
 	#During synthesis, there is no max_time_steps limitation so the model can sample much longer audio than 8k(or 13k) steps. (Audio can go up to 500k steps, equivalent to ~21sec on 24kHz)
 	#Usually your GPU can handle ~2x wavenet_batch_size during synthesis for the same memory amount during training (because no gradients to keep and ops to register for backprop)
 	wavenet_synthesis_batch_size = 10 * 2, #This ensure that wavenet synthesis goes up to 4x~8x faster when synthesizing multiple sentences. Watch out for OOM with long audios.
@@ -328,7 +328,7 @@ hparams = tf.contrib.training.HParams(
 
 	#training samples length
 	max_time_sec = None, #Max time of audio for training. If None, we use max_time_steps.
-	max_time_steps = 8000, #Max time steps in audio used to train wavenet (decrease to save memory) (Recommend: 8000 on modest GPUs, 13000 on stronger ones)
+	max_time_steps = 13000, #Max time steps in audio used to train wavenet (decrease to save memory) (Recommend: 8000 on modest GPUs, 13000 on stronger ones)
 
 	#Evaluation parameters
 	wavenet_natural_eval = False, #Whether to use 100% natural eval (to evaluate autoregressivity performance) or with teacher forcing to evaluate overfit and model consistency.
